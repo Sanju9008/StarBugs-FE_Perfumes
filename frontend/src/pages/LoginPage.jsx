@@ -1,0 +1,98 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthLayout from '../components/AuthLayout';
+import authService from '../services/authService';
+
+const LoginPage = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    rememberMe: false
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      await authService.login(formData);
+      navigate('/home');
+    } catch (err) {
+      setError(err.message || 'Invalid email or password. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <AuthLayout title="Welcome Back" subtitle="Sign in to your ShopNest account">
+      {error && <div className="alert alert-error">{error}</div>}
+      
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            className="form-input"
+            placeholder=" "
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <label htmlFor="email" className="form-label">Email Address</label>
+        </div>
+
+        <div className="form-group">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            className="form-input"
+            placeholder=" "
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <label htmlFor="password" className="form-label">Password</label>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+          <div className="checkbox-group">
+            <input
+              type="checkbox"
+              id="rememberMe"
+              name="rememberMe"
+              checked={formData.rememberMe}
+              onChange={handleChange}
+            />
+            <label htmlFor="rememberMe">Remember me</label>
+          </div>
+          <Link to="#" className="auth-link" style={{ fontSize: '0.875rem' }}>Forgot password?</Link>
+        </div>
+
+        <button type="submit" className="btn-primary" disabled={loading}>
+          {loading ? <span className="spinner"></span> : 'Sign In'}
+        </button>
+      </form>
+
+      <div className="auth-footer">
+        Don't have an account? <Link to="/register" className="auth-link">Create one</Link>
+      </div>
+    </AuthLayout>
+  );
+};
+
+export default LoginPage;
