@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import authService from '../services/authService';
 
+import { toast } from 'react-toastify';
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -27,9 +29,12 @@ const LoginPage = () => {
 
     try {
       await authService.login(formData);
+      toast.success('Successfully logged in!');
       navigate('/products');
     } catch (err) {
-      setError(err.message || 'Invalid email or password. Please try again.');
+      const msg = err.message || 'Invalid email or password. Please try again.';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

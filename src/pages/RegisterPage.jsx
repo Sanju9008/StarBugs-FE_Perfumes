@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import authService from '../services/authService';
 
+import { toast } from 'react-toastify';
+
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -48,6 +50,7 @@ const RegisterPage = () => {
     const validationError = validateForm();
     if (validationError) {
       setStatus({ type: 'error', message: validationError });
+      toast.error(validationError);
       return;
     }
 
@@ -57,9 +60,12 @@ const RegisterPage = () => {
     try {
       const response = await authService.register(formData);
       setStatus({ type: 'success', message: response.message || 'Registration successful! Redirecting to login...' });
+      toast.success('Registration successful! Please login.');
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
-      setStatus({ type: 'error', message: err.message || 'Registration failed. Please try again.' });
+      const msg = err.message || 'Registration failed. Please try again.';
+      setStatus({ type: 'error', message: msg });
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

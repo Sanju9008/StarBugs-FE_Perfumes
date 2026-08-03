@@ -22,7 +22,7 @@ const Navbar = ({ cartCount }) => {
 
         {/* Right Side: Cart & Avatar */}
         <div className="navbar-actions">
-          <div className="cart-icon-wrapper">
+          <div className="cart-icon-wrapper" onClick={() => navigate('/cart')} style={{ cursor: 'pointer' }}>
             <ShoppingCart size={24} />
             {cartCount > 0 && (
               <span className="cart-badge">{cartCount}</span>

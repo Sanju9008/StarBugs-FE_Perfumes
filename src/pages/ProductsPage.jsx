@@ -3,12 +3,15 @@ import Navbar from '../components/Navbar';
 import CategoryBar from '../components/CategoryBar';
 import ProductCard from '../components/ProductCard';
 import productService from '../services/productService';
+import cartService from '../services/cartService';
+import { toast } from 'react-toastify';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
   const [cartCount, setCartCount] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -21,6 +24,16 @@ const ProductsPage = () => {
         ]);
         setProducts(productsData);
         setCategories(categoriesData);
+        
+        // Also fetch cart count
+        try {
+            const cartData = await cartService.getCart();
+            setCartCount(cartData.cartTotalItems || 0);
+            setCartItems(cartData.items || []);
+        } catch(e) {
+            console.error("Failed to fetch initial cart", e);
+        }
+        
         setLoading(false);
       } catch (err) {
         setError('Failed to load products. Please try again later.');
@@ -31,22 +44,57 @@ const ProductsPage = () => {
     fetchData();
   }, []);
 
-  const handleAddToCart = (product) => {
-    setCartCount(prev => prev + 1);
-    // Here we could also call a backend API to save the cart item
+  const handleAddToCart = async (product) => {
+    try {
+        const data = await cartService.addToCart(product.productId, 1);
+        setCartCount(data.cartTotalItems);
+        setCartItems(data.items || []);
+        toast.success(`Added ${product.name} to cart`);
+    } catch(e) {
+        console.error("Failed to add to cart", e);
+        toast.error("Failed to add to cart");
+    }
+  };
+  
+  const handleUpdateQuantity = async (cartItemId, newQuantity) => {
+    try {
+      const data = await cartService.updateQuantity(cartItemId, newQuantity);
+      setCartCount(data.cartTotalItems);
+      setCartItems(data.items || []);
+    } catch (e) {
+      console.error("Failed to update quantity", e);
+      toast.error("Failed to update quantity");
+    }
   };
 
-  const filteredProducts = selectedCategoryId 
-    ? products.filter(product => product.category && product.category.categoryId === selectedCategoryId)
-    : products;
+  const handleRemoveItem = async (cartItemId) => {
+    try {
+      const data = await cartService.removeFromCart(cartItemId);
+      setCartCount(data.cartTotalItems);
+      setCartItems(data.items || []);
+      toast.info("Item removed from cart");
+    } catch (e) {
+      console.error("Failed to remove item", e);
+      toast.error("Failed to remove item");
+    }
+  };
+
+  const filteredProducts = products.filter(product => {
+    if (selectedCategoryFilter === 'all') return true;
+    if (!product.category) return false;
+    
+    if (selectedCategoryFilter === 'mens') return product.category.categoryId === 2;
+    if (selectedCategoryFilter === 'womens') return product.category.categoryId === 1;
+    if (selectedCategoryFilter === 'luxury') return product.category.categoryId === 3;
+    return true;
+  });
 
   return (
     <div className="products-page-container">
       <Navbar cartCount={cartCount} />
       <CategoryBar 
-        categories={categories} 
-        selectedCategoryId={selectedCategoryId}
-        onSelectCategory={setSelectedCategoryId}
+        selectedCategoryFilter={selectedCategoryFilter}
+        onSelectCategory={setSelectedCategoryFilter}
       />
       
       <main className="products-main">
@@ -59,13 +107,19 @@ const ProductsPage = () => {
           <div className="alert alert-error">{error}</div>
         ) : (
           <div className="products-grid">
-            {filteredProducts.map(product => (
-              <ProductCard 
-                key={product.productId} 
-                product={product} 
-                onAddToCart={handleAddToCart} 
-              />
-            ))}
+            {filteredProducts.map(product => {
+              const cartItem = cartItems.find(item => item.productId === product.productId);
+              return (
+                <ProductCard 
+                  key={product.productId} 
+                  product={product} 
+                  cartItem={cartItem}
+                  onAddToCart={handleAddToCart} 
+                  onUpdateQuantity={handleUpdateQuantity}
+                  onRemove={handleRemoveItem}
+                />
+              );
+            })}
           </div>
         )}
       </main>
