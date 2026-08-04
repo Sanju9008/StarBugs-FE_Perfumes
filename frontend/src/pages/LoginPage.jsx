@@ -3,12 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import authService from '../services/authService';
 
+import { toast } from 'react-toastify';
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
-    rememberMe: false
+    password: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -28,9 +29,12 @@ const LoginPage = () => {
 
     try {
       await authService.login(formData);
-      navigate('/home');
+      toast.success('Successfully logged in!');
+      navigate('/products');
     } catch (err) {
-      setError(err.message || 'Invalid email or password. Please try again.');
+      const msg = err.message || 'Invalid email or password. Please try again.';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -69,17 +73,7 @@ const LoginPage = () => {
           <label htmlFor="password" className="form-label">Password</label>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <div className="checkbox-group">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              name="rememberMe"
-              checked={formData.rememberMe}
-              onChange={handleChange}
-            />
-            <label htmlFor="rememberMe">Remember me</label>
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '1.5rem' }}>
           <Link to="#" className="auth-link" style={{ fontSize: '0.875rem' }}>Forgot password?</Link>
         </div>
 

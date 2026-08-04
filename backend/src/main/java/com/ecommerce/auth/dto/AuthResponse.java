@@ -25,10 +25,10 @@ public class AuthResponse {
     @AllArgsConstructor
     public static class UserInfo {
         private Long id;
-        private String fullName;
+        private String username;
         private String email;
-        private String mobileNumber;
         private String role;
+        private String profilePhoto;
     }
 
     // ─── Static factory methods ───────────────────────────────────────────────

@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import authService from '../services/authService';
 
+import { toast } from 'react-toastify';
+
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: '',
+    username: '',
     email: '',
     mobileNumber: '',
     password: '',
@@ -48,6 +50,7 @@ const RegisterPage = () => {
     const validationError = validateForm();
     if (validationError) {
       setStatus({ type: 'error', message: validationError });
+      toast.error(validationError);
       return;
     }
 
@@ -57,14 +60,12 @@ const RegisterPage = () => {
     try {
       const response = await authService.register(formData);
       setStatus({ type: 'success', message: response.message || 'Registration successful! Redirecting to login...' });
-      
-      // Redirect to login after 2 seconds on success
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
-      
+      toast.success('Registration successful! Please login.');
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
-      setStatus({ type: 'error', message: err.message || 'Registration failed. Please try again.' });
+      const msg = err.message || 'Registration failed. Please try again.';
+      setStatus({ type: 'error', message: msg });
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -82,17 +83,17 @@ const RegisterPage = () => {
         <div className="form-group">
           <input
             type="text"
-            id="fullName"
-            name="fullName"
+            id="username"
+            name="username"
             className="form-input"
             placeholder=" "
-            value={formData.fullName}
+            value={formData.username}
             onChange={handleChange}
             required
             minLength="2"
             maxLength="100"
           />
-          <label htmlFor="fullName" className="form-label">Full Name</label>
+          <label htmlFor="username" className="form-label">Full Name</label>
         </div>
 
         <div className="form-group">

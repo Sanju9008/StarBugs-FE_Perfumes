@@ -63,11 +63,11 @@ public class UserController {
         return ResponseEntity.ok(authService.getAllUsers());
     }
 
-    // ─── PUT /api/users/{id} ───────────────────────────────────────────────────
+    // ─── POST / PUT /api/users/{id} ──────────────────────────────────────────────
     /**
      * Update a user's profile. Users can only update their own profile.
      */
-    @PutMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.POST})
     public ResponseEntity<AuthResponse.UserInfo> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserRequest request,

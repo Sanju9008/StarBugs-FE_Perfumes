@@ -21,6 +21,8 @@ frontend/yarn-error.log*
 
 # Backend
 backend/target/
+backend/maven/
+backend/maven.zip
 backend/!.mvn/wrapper/maven-wrapper.jar
 backend/log/
 backend/logs/

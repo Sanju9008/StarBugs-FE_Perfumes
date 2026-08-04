@@ -32,6 +32,15 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    // ─── GET /api/auth/verify ──────────────────────────────────────────────────
+
+    @GetMapping("/verify")
+    public ResponseEntity<AuthResponse> verifyEmail(@RequestParam("token") String token) {
+        log.info("Email verification attempt with token: {}", token);
+        AuthResponse response = authService.verifyEmail(token);
+        return ResponseEntity.ok(response);
+    }
+
     // ─── POST /api/auth/login ──────────────────────────────────────────────────
 
     @PostMapping("/login")
@@ -59,7 +68,11 @@ public class AuthController {
     // ─── POST /api/auth/logout ─────────────────────────────────────────────────
 
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, Object>> logout(HttpServletResponse httpResponse) {
+    public ResponseEntity<Map<String, Object>> logout(HttpServletResponse httpResponse, java.security.Principal principal) {
+        if (principal != null) {
+            authService.logout(principal.getName());
+        }
+
         // Clear JWT cookie
         Cookie jwtCookie = new Cookie("jwt_token", null);
         jwtCookie.setHttpOnly(true);

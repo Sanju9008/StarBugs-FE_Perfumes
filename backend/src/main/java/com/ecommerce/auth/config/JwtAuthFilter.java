@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import com.ecommerce.auth.repository.JwtTokenRepository;
 
 import java.io.IOException;
 
@@ -25,6 +26,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
+    private final JwtTokenRepository jwtTokenRepository;
 
     @Override
     protected void doFilterInternal(
@@ -46,8 +48,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+                
+                boolean isTokenInDb = jwtTokenRepository.findByToken(jwt).isPresent();
 
-                if (jwtUtil.isTokenValid(jwt, userDetails)) {
+                if (jwtUtil.isTokenValid(jwt, userDetails) && isTokenInDb) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

@@ -3,7 +3,12 @@ package com.ecommerce.auth.service;
 import com.ecommerce.auth.dto.*;
 import com.ecommerce.auth.entity.User;
 import com.ecommerce.auth.repository.UserRepository;
+import com.ecommerce.auth.entity.VerificationToken;
+import com.ecommerce.auth.repository.VerificationTokenRepository;
+import com.ecommerce.auth.entity.JwtToken;
+import com.ecommerce.auth.repository.JwtTokenRepository;
 import com.ecommerce.auth.util.JwtUtil;
+import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +31,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final VerificationTokenRepository tokenRepository;
+    private final JwtTokenRepository jwtTokenRepository;
+    private final EmailService emailService;
 
     // ─── Register ─────────────────────────────────────────────────────────────
 
@@ -43,12 +51,10 @@ public class AuthService {
 
         // Build and save user
         User user = User.builder()
-                .fullName(request.getFullName())
+                .username(request.getUsername())
                 .email(request.getEmail().toLowerCase().trim())
-                .mobileNumber(request.getMobileNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(User.Role.USER)
-                .isActive(true)
                 .build();
 
         User savedUser = userRepository.save(user);
@@ -56,12 +62,33 @@ public class AuthService {
 
         return AuthResponse.builder()
                 .success(true)
-                .message("Registration successful! Please login to continue.")
+                .message("Registration successful!")
+                .build();
+    }
+
+    // ─── Verify Email ─────────────────────────────────────────────────────────
+
+    @Transactional
+    public AuthResponse verifyEmail(String token) {
+        VerificationToken verificationToken = tokenRepository.findByToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid verification token."));
+
+        if (verificationToken.isExpired()) {
+            throw new IllegalArgumentException("Verification token has expired.");
+        }
+
+        // Optional: Delete the token after successful verification
+        tokenRepository.delete(verificationToken);
+
+        return AuthResponse.builder()
+                .success(true)
+                .message("Email verified successfully! You can now login.")
                 .build();
     }
 
     // ─── Login ────────────────────────────────────────────────────────────────
 
+    @Transactional
     public AuthResponse login(LoginRequest request) {
         try {
             authenticationManager.authenticate(
@@ -76,17 +103,44 @@ public class AuthService {
             throw new BadCredentialsException("Authentication failed: " + e.getMessage());
         }
 
-        User user = userRepository.findByEmailAndIsActiveTrue(request.getEmail().toLowerCase().trim())
-                .orElseThrow(() -> new BadCredentialsException("User account not found or inactive."));
+        User user = userRepository.findByEmail(request.getEmail().toLowerCase().trim())
+                .orElseThrow(() -> new BadCredentialsException("User account not found."));
+
+        // Invalidate previous tokens for the user
+        List<JwtToken> existingTokens = jwtTokenRepository.findAllByUser(user);
+        if (!existingTokens.isEmpty()) {
+            jwtTokenRepository.deleteAll(existingTokens);
+        }
 
         String token = jwtUtil.generateToken(user, request.isRememberMe());
+        
+        JwtToken jwtToken = JwtToken.builder()
+                .user(user)
+                .token(token)
+                .expiresAt(jwtUtil.extractExpiration(token).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                .build();
+        jwtTokenRepository.save(jwtToken);
+        
         log.info("User logged in: {}", user.getEmail());
 
         return AuthResponse.success(
-            "Login successful! Welcome back, " + user.getFullName() + "!",
+            "Login successful! Welcome back, " + user.getActualUsername() + "!",
             token,
             mapToUserInfo(user)
         );
+    }
+
+    // ─── Logout ───────────────────────────────────────────────────────────────
+
+    @Transactional
+    public void logout(String email) {
+        userRepository.findByEmail(email).ifPresent(user -> {
+            List<JwtToken> existingTokens = jwtTokenRepository.findAllByUser(user);
+            if (!existingTokens.isEmpty()) {
+                jwtTokenRepository.deleteAll(existingTokens);
+                log.info("Deleted {} tokens for user {}", existingTokens.size(), email);
+            }
+        });
     }
 
     // ─── Get User by ID ───────────────────────────────────────────────────────
@@ -100,7 +154,7 @@ public class AuthService {
     // ─── Get All Users ────────────────────────────────────────────────────────
 
     public List<AuthResponse.UserInfo> getAllUsers() {
-        return userRepository.findAllByIsActiveTrue()
+        return userRepository.findAll()
                 .stream()
                 .map(this::mapToUserInfo)
                 .collect(Collectors.toList());
@@ -113,8 +167,13 @@ public class AuthService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + id));
 
-        user.setFullName(request.getFullName());
-        user.setMobileNumber(request.getMobileNumber());
+        if (request.getUsername() != null && !request.getUsername().trim().isEmpty()) {
+            user.setUsername(request.getUsername());
+        }
+
+        if (request.getProfilePhoto() != null) {
+            user.setProfilePhoto(request.getProfilePhoto());
+        }
 
         User updatedUser = userRepository.save(user);
         log.info("User updated: {}", updatedUser.getEmail());
@@ -127,10 +186,9 @@ public class AuthService {
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + id));
-        // Soft delete
-        user.setActive(false);
-        userRepository.save(user);
-        log.info("User soft-deleted: {}", user.getEmail());
+        // Hard delete
+        userRepository.delete(user);
+        log.info("User deleted: {}", user.getEmail());
     }
 
     // ─── Helper ───────────────────────────────────────────────────────────────
@@ -138,10 +196,10 @@ public class AuthService {
     private AuthResponse.UserInfo mapToUserInfo(User user) {
         return AuthResponse.UserInfo.builder()
                 .id(user.getId())
-                .fullName(user.getFullName())
+                .username(user.getActualUsername())
                 .email(user.getEmail())
-                .mobileNumber(user.getMobileNumber())
                 .role(user.getRole().name())
+                .profilePhoto(user.getProfilePhoto())
                 .build();
     }
 }

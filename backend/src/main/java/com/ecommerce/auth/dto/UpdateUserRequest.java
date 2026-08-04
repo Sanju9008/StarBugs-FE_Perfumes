@@ -12,11 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateUserRequest {
 
-    @NotBlank(message = "Full name is required")
-    @Size(min = 2, max = 100, message = "Full name must be between 2 and 100 characters")
-    private String fullName;
+    @Size(min = 2, max = 255, message = "Username must be between 2 and 255 characters")
+    private String username;
 
-    @NotBlank(message = "Mobile number is required")
-    @Pattern(regexp = "^[0-9]{10}$", message = "Mobile number must contain exactly 10 digits")
-    private String mobileNumber;
+    private String profilePhoto;
 }

@@ -13,7 +13,7 @@ const api = axios.create({
 // Request interceptor to add JWT token
 api.interceptors.request.use(
   (config) => {
-    const token = Cookies.get('jwt_token');
+    const token = localStorage.getItem('jwt_token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -28,6 +28,9 @@ const authService = {
       const response = await api.post(`${API_URL}/register`, userData);
       return response.data;
     } catch (error) {
+      if (!error.response) {
+        throw { message: 'Network error: Cannot reach the server. It might still be starting up.' };
+      }
       throw error.response?.data || { message: 'Registration failed' };
     }
   },
@@ -36,11 +39,7 @@ const authService = {
     try {
       const response = await api.post(`${API_URL}/login`, credentials);
       if (response.data.token) {
-        Cookies.set('jwt_token', response.data.token, {
-          expires: credentials.rememberMe ? 7 : 1, // 7 days or 1 day
-          secure: window.location.protocol === 'https:',
-          sameSite: 'strict',
-        });
+        localStorage.setItem('jwt_token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }
       return response.data;
@@ -55,9 +54,18 @@ const authService = {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      Cookies.remove('jwt_token');
+      localStorage.removeItem('jwt_token');
       localStorage.removeItem('user');
       window.location.href = '/login';
+    }
+  },
+
+  verifyEmail: async (token) => {
+    try {
+      const response = await api.get(`${API_URL}/verify`, { params: { token } });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Verification failed' };
     }
   },
 
@@ -66,15 +74,12 @@ const authService = {
       const response = await api.get(`${USER_API_URL}/me`);
       return response.data;
     } catch (error) {
-      if (error.response?.status === 401) {
-          authService.logout();
-      }
       throw error;
     }
   },
   
   isAuthenticated: () => {
-      return !!Cookies.get('jwt_token');
+      return !!localStorage.getItem('jwt_token');
   }
 };
 

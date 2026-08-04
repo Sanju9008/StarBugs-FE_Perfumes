@@ -1,0 +1,62 @@
+product_id,created_at,description,name,price,stock,updated_at,category_id
+1,"2026-07-27 20:52:24","A romantic and rich blend of dark damask rose wrapped in smoky oud wood.","Velvet Rose & Oud Eau de Parfum",4599.00,68,"2026-07-27 20:52:24",1
+2,"2026-07-27 20:52:24","An enchanting evening fragrance featuring night-blooming jasmine and warm vanilla.","Midnight Jasmine Bloom",3240.00,54,"2026-07-27 20:52:24",1
+3,"2026-07-27 20:52:24","A sparkling, fresh scent inspired by morning dew and crisp ocean breezes.","Crystal Aqua Fresh",2170.00,81,"2026-07-27 20:52:24",1
+4,"2026-07-27 20:52:24","A warm, sensual aroma with notes of golden amber, honey, and sandalwood.","Golden Amber Bliss",3357.00,59,"2026-07-27 20:52:24",1
+5,"2026-07-27 20:52:24","A mysterious and elegant blend of black orchid, patchouli, and dark plum.","Orchid Twilight",4173.00,65,"2026-07-27 20:52:24",1
+6,"2026-07-27 20:52:24","A light and airy floral scent capturing the essence of springtime cherry blossoms.","Spring Cherry Blossom",2419.00,98,"2026-07-27 20:52:24",1
+7,"2026-07-27 20:52:24","A vibrant and energetic mix of mandarin, pink grapefruit, and sweet orange.","Citrus Sunset Splash",1726.00,13,"2026-07-27 20:52:24",1
+8,"2026-07-27 20:52:24","A cozy and comforting fragrance wrapping you in sweet vanilla and soft cashmere musk.","Vanilla Cashmere",3088.00,86,"2026-07-27 20:52:24",1
+9,"2026-07-27 20:52:24","A soft and romantic floral perfume blooming with fresh peonies and red apple.","Peony Dreamscape",4125.00,92,"2026-07-27 20:52:24",1
+10,"2026-07-27 20:52:24","An earthy and sophisticated blend of cedarwood, vetiver, and subtle floral notes.","Mystic Cedarwood",2240.00,98,"2026-07-27 20:52:24",1
+11,"2026-07-27 20:52:24","A delicate and pure fragrance featuring white lilies and a hint of fresh green leaves.","Enchanted Lily",3080.00,59,"2026-07-27 20:52:24",1
+12,"2026-07-27 20:52:24","A playfully sweet scent with notes of sugared plums, berries, and spun sugar.","Sugared Plum Magic",1995.00,14,"2026-07-27 20:52:24",1
+13,"2026-07-27 20:52:24","A classic and timeless floral aroma with rich gardenia and a touch of tuberose.","Lush Gardenia",3904.00,38,"2026-07-27 20:52:24",1
+14,"2026-07-27 20:52:24","A unique blend of spicy saffron, desert rose, and warm leather undertones.","Desert Rose Mirage",1207.00,87,"2026-07-27 20:52:24",1
+15,"2026-07-27 20:52:24","A refreshing aquatic fragrance with hints of sea salt, water lily, and white musk.","Oceanic Pearl",2799.00,89,"2026-07-27 20:52:24",1
+16,"2026-07-27 20:52:24","A fruity and fun mix of wild blackberries, raspberries, and a touch of jasmine.","Wild Berry Fantasy",2575.00,89,"2026-07-27 20:52:24",1
+17,"2026-07-27 20:52:24","A sweet and sophisticated combination of ripe fig, honey, and soft petals.","Honeyed Fig & Bloom",3169.00,80,"2026-07-27 20:52:24",1
+18,"2026-07-27 20:52:24","An exotic and warm fragrance featuring saffron, cardamom, and deep amber.","Spicy Saffron Nights",4420.00,33,"2026-07-27 20:52:24",1
+19,"2026-07-27 20:52:24","A calming and soothing scent with French lavender and soft powdery notes.","Ethereal Lavender",1711.00,29,"2026-07-27 20:52:24",1
+20,"2026-07-27 20:52:24","A bright and sunny perfume bursting with juicy mango and tropical hibiscus.","Tropical Mango Breeze",2494.00,47,"2026-07-27 20:52:24",1
+21,"2026-07-27 20:52:24","A luxurious and commanding fragrance with rich oud, rosewood, and exotic spices.","Royal Oud Majesty",3900.00,97,"2026-07-27 20:52:24",1
+22,"2026-07-29 23:44:13","A deep, aquatic fragrance with notes of sea salt and rich woods.","Aqua Profondo",2500.00,45,"2026-07-29 23:44:13",2
+23,"2026-07-29 23:44:13","A mysterious woody scent featuring intense cedar and warm amber.","Wood Enigma",3200.00,30,"2026-07-29 23:44:13",2
+24,"2026-07-29 23:44:13","A bold blend of rich leather, smoky tonka bean, and dark spices.","Midnight Leather",4100.00,20,"2026-07-29 23:44:13",2
+25,"2026-07-29 23:44:13","An energizing spicy scent with hints of black pepper and bergamot.","Spice Horizon",1800.00,55,"2026-07-29 23:44:13",2
+26,"2026-07-29 23:44:13","A refreshing oceanic scent that captures the essence of a sea breeze.","Oceanic Breeze",2200.00,60,"2026-07-29 23:44:13",2
+27,"2026-07-29 23:44:13","A crisp, clean fragrance highlighting silver cedar and fresh citrus.","Silver Cedar",2900.00,35,"2026-07-29 23:44:13",2
+28,"2026-07-29 23:44:13","A warm and inviting evening scent with notes of amber and vanilla.","Amber Dusk",3600.00,25,"2026-07-29 23:44:13",2
+29,"2026-07-29 23:44:13","A luxurious oud fragrance balanced with smooth velvet floral notes.","Oud Velvet",5500.00,15,"2026-07-29 23:44:13",2
+30,"2026-07-29 23:44:13","A vibrant citrus explosion grounded by an earthy patchouli base.","Citrus Storm",2100.00,50,"2026-07-29 23:44:13",2
+31,"2026-07-29 23:44:13","A fresh, earthy scent reminiscent of a misty morning in the woods.","Forest Whisper",2700.00,40,"2026-07-29 23:44:13",2
+32,"2026-07-29 23:44:13","An intense, dark essence designed for the modern gentleman.","Noir Essence",4500.00,18,"2026-07-29 23:44:13",2
+33,"2026-07-29 23:44:13","A sophisticated fragrance with golden tobacco leaves and sweet honey.","Golden Tobacco",3800.00,28,"2026-07-29 23:44:13",2
+34,"2026-07-29 23:44:13","A profound aquatic scent diving into the deep blue ocean mysteries.","Azure Deep",2600.00,48,"2026-07-29 23:44:13",2
+35,"2026-07-29 23:44:13","A royal treatment of classic vetiver mixed with subtle citrus notes.","Vetiver Royale",4900.00,12,"2026-07-29 23:44:13",2
+36,"2026-07-29 23:44:13","A supreme musk fragrance that lingers gracefully throughout the day.","Musk Supreme",3400.00,32,"2026-07-29 23:44:13",2
+37,"2026-07-29 23:44:13","A calming sandalwood drift mixed with creamy vanilla undertones.","Sandalwood Drift",3100.00,38,"2026-07-29 23:44:13",2
+38,"2026-07-29 23:44:13","A green, mossy scent that feels incredibly fresh and natural.","Emerald Moss",2300.00,52,"2026-07-29 23:44:13",2
+39,"2026-07-29 23:44:13","A fiery crimson spice blend with bold cinnamon and warm woods.","Crimson Spice",3700.00,22,"2026-07-29 23:44:13",2
+40,"2026-07-29 23:44:13","A unique steel orchid scent with an unexpected metallic freshness.","Steel Orchid",4200.00,16,"2026-07-29 23:44:13",2
+41,"2026-07-29 23:44:13","A cool, icy fragrance combining mint, pine, and smooth woods.","Platinum Ice",2800.00,42,"2026-07-29 23:44:13",2
+42,"2026-07-29 23:54:35","A majestic blend of pure oud and rich damask rose.","Oud Imperial",35000.00,5,"2026-07-29 23:54:35",3
+43,"2026-07-29 23:54:35","A fiery concoction of rare Iranian saffron and warm spices.","Saffron Rouge",28000.00,10,"2026-07-29 23:54:35",3
+44,"2026-07-29 23:54:35","An intoxicating elixir featuring authentic ambergris and vanilla.","Ambergris Elixir",42000.00,3,"2026-07-29 23:54:35",3
+45,"2026-07-29 23:54:35","A sophisticated profile of rich leather infused with smoky woods.","Leather Royale",21000.00,8,"2026-07-29 23:54:35",3
+46,"2026-07-29 23:54:35","An opulent rose scent intertwined with pure oud and sweet amber.","Rose d'Arabie",38000.00,4,"2026-07-29 23:54:35",3
+47,"2026-07-29 23:54:35","A creamy, divine fragrance showcasing rare Indian sandalwood.","Majestic Sandalwood",15000.00,12,"2026-07-29 23:54:35",3
+48,"2026-07-29 23:54:35","A luxurious interpretation of Madagascan vanilla and delicate orchids.","Velvet Vanilla",18000.00,15,"2026-07-29 23:54:35",3
+49,"2026-07-29 23:54:35","A dark, mesmerizing scent built around pure Cambodian oud.","Midnight Oud",45000.00,2,"2026-07-29 23:54:35",3
+50,"2026-07-29 23:54:35","A robust composition of Tuscan leather and aromatic thyme.","Tuscan Leather",24000.00,9,"2026-07-29 23:54:35",3
+51,"2026-07-29 23:54:35","A regal offering of warm amber combined with precious resins.","Royal Amber",31000.00,6,"2026-07-29 23:54:35",3
+52,"2026-07-29 23:54:35","A vibrant fusion of black saffron and delicate violet.","Black Saffron",26000.00,11,"2026-07-29 23:54:35",3
+53,"2026-07-29 23:54:35","A mystical blend of rare desert rose and spicy saffron.","Desert Rose",19000.00,14,"2026-07-29 23:54:35",3
+54,"2026-07-29 23:54:35","A pure expression of oceanic ambergris and sea salt.","Pure Ambergris",40000.00,4,"2026-07-29 23:54:35",3
+55,"2026-07-29 23:54:35","A commanding fragrance featuring imperial leather and smoked tea.","Imperial Leather",27000.00,7,"2026-07-29 23:54:35",3
+56,"2026-07-29 23:54:35","A glowing scent of golden oud and sweet honey.","Golden Oud",36000.00,5,"2026-07-29 23:54:35",3
+57,"2026-07-29 23:54:35","A woody masterpiece enriched with precious saffron strands.","Saffron Woods",22000.00,10,"2026-07-29 23:54:35",3
+58,"2026-07-29 23:54:35","A heavenly aroma of celestial amber and soft musk.","Celestial Amber",16000.00,13,"2026-07-29 23:54:35",3
+59,"2026-07-29 23:54:35","A noble creation centered around the finest pure oud.","Oud Nobile",43000.00,3,"2026-07-29 23:54:35",3
+60,"2026-07-29 23:54:35","A deeply satisfying scent of rich leather and dark chocolate.","Rich Leather",25000.00,8,"2026-07-29 23:54:35",3
+61,"2026-07-29 23:54:35","A harmonious symphony of ambergris, patchouli, and rare woods.","Ambergris Symphony",39000.00,4,"2026-07-29 23:54:35",3

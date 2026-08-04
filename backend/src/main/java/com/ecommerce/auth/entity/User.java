@@ -23,18 +23,16 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "full_name", nullable = false, length = 100)
-    private String fullName;
+    @Column(name = "username", nullable = false, unique = true, length = 255)
+    private String username;
 
-    @Column(name = "email", nullable = false, unique = true, length = 150)
+    @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(name = "mobile_number", nullable = false, length = 10)
-    private String mobileNumber;
-
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -42,9 +40,9 @@ public class User implements UserDetails {
     @Builder.Default
     private Role role = Role.USER;
 
-    @Column(name = "is_active", nullable = false)
-    @Builder.Default
-    private boolean isActive = true;
+    @Lob
+    @Column(name = "profile_photo", columnDefinition = "LONGTEXT")
+    private String profilePhoto;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -72,7 +70,11 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.email; // Using email for authentication
+    }
+
+    public String getActualUsername() {
+        return (this.username != null && !this.username.trim().isEmpty()) ? this.username : this.email;
     }
 
     @Override
@@ -92,12 +94,12 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.isActive;
+        return true;
     }
 
     // ─── Role Enum ────────────────────────────────────────────────────────────
 
     public enum Role {
-        USER, ADMIN
+        CUSTOMER, ADMIN, USER
     }
 }
