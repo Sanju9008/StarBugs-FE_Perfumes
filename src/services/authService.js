@@ -74,9 +74,6 @@ const authService = {
       const response = await api.get(`${USER_API_URL}/me`);
       return response.data;
     } catch (error) {
-      if (error.response?.status === 401) {
-          authService.logout();
-      }
       throw error;
     }
   },

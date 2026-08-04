@@ -38,6 +38,15 @@ const addressService = {
     }
   },
 
+  updateAddress: async (id, addressData) => {
+    try {
+      const response = await api.put(`${API_URL}/${id}`, addressData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update address' };
+    }
+  },
+
   deleteAddress: async (addressId) => {
     try {
       await api.delete(`${API_URL}/${addressId}`);
