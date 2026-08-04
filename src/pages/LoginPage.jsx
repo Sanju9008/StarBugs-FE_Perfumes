@@ -89,8 +89,13 @@ const LoginPage = () => {
         </button>
       </form>
 
-      <div className="auth-footer">
-        Don't have an account? <Link to="/register" className="auth-link">Create one</Link>
+      <div className="auth-footer" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
+        <div>
+          Don't have an account? <Link to="/register" className="auth-link">Create one</Link>
+        </div>
+        <div style={{ fontSize: '0.825rem', marginTop: '0.5rem' }}>
+          Are you an Administrator? <Link to="/admin/login" className="auth-link" style={{ fontWeight: '600' }}>Admin Login</Link>
+        </div>
       </div>
     </AuthLayout>
   );
