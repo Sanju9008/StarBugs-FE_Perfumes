@@ -7,6 +7,13 @@ import { toast } from 'react-toastify';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (authService.isAuthenticated()) {
+      navigate('/products', { replace: true });
+    }
+  }, [navigate]);
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -30,7 +37,7 @@ const LoginPage = () => {
     try {
       await authService.login(formData);
       toast.success('Successfully logged in!');
-      navigate('/products');
+      navigate('/products', { replace: true });
     } catch (err) {
       const msg = err.message || 'Invalid email or password. Please try again.';
       setError(msg);
