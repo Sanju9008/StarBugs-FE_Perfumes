@@ -21,6 +21,17 @@ const adminService = {
     }
   },
 
+  updateProduct: async (productId, productData) => {
+    try {
+      const response = await axios.put(`${API_BASE}/products/${productId}`, productData, {
+        headers: getAuthHeaders()
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update product' };
+    }
+  },
+
   deleteProduct: async (productId) => {
     try {
       const response = await axios.delete(`${API_BASE}/products/${productId}`, {
@@ -116,6 +127,18 @@ const adminService = {
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to fetch overall analytics' };
+    }
+  },
+
+  // ─── Order Status Management ─────────────────────────────────────────────
+  updateOrderStatus: async (orderId, status) => {
+    try {
+      const response = await axios.put(`${API_BASE}/admin/orders/${orderId}/status`, { status }, {
+        headers: getAuthHeaders()
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update order status' };
     }
   }
 };

@@ -15,13 +15,15 @@ const AdminLoginPage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // If already logged in as Admin, redirect directly to admin dashboard
+    // If already logged in, redirect based on role
     const userStr = localStorage.getItem('user');
     if (authService.isAuthenticated() && userStr) {
       try {
         const user = JSON.parse(userStr);
         if (user && user.role && user.role.toUpperCase().includes('ADMIN')) {
           navigate('/admin/dashboard', { replace: true });
+        } else {
+          navigate('/products', { replace: true });
         }
       } catch (e) {
         console.error('Error parsing user data:', e);
@@ -129,17 +131,10 @@ const AdminLoginPage = () => {
 
         <div className="admin-login-footer">
           <div>
-            Don't have an account yet?{' '}
-            <Link to="/register" className="admin-link">
+            Need an Administrator account?{' '}
+            <Link to="/admin/register" className="admin-link">
               <UserPlus size={14} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
-              Register Here
-            </Link>
-          </div>
-          <div>
-            Looking for User Storefront?{' '}
-            <Link to="/login" className="admin-link">
-              <User size={14} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
-              User Login
+              Register Admin
             </Link>
           </div>
         </div>

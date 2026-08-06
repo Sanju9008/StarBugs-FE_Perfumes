@@ -10,6 +10,18 @@ const LoginPage = () => {
 
   React.useEffect(() => {
     if (authService.isAuthenticated()) {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          if (user && user.role && user.role.toUpperCase().includes('ADMIN')) {
+            navigate('/admin/dashboard', { replace: true });
+            return;
+          }
+        } catch (e) {
+          console.error('Error parsing user data:', e);
+        }
+      }
       navigate('/products', { replace: true });
     }
   }, [navigate]);
@@ -89,13 +101,8 @@ const LoginPage = () => {
         </button>
       </form>
 
-      <div className="auth-footer" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
-        <div>
-          Don't have an account? <Link to="/register" className="auth-link">Create one</Link>
-        </div>
-        <div style={{ fontSize: '0.825rem', marginTop: '0.5rem' }}>
-          Are you an Administrator? <Link to="/admin/login" className="auth-link" style={{ fontWeight: '600' }}>Admin Login</Link>
-        </div>
+      <div className="auth-footer">
+        Don't have an account? <Link to="/register" className="auth-link">Create one</Link>
       </div>
     </AuthLayout>
   );

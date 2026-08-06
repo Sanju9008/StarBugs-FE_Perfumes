@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import AdminLoginPage from './pages/AdminLoginPage'
+import AdminRegisterPage from './pages/AdminRegisterPage'
 import AdminDashboard from './pages/AdminDashboard'
 import RegisterPage from './pages/RegisterPage'
 import HomePage from './pages/HomePage'
@@ -52,7 +53,7 @@ function App() {
   useEffect(() => {
     // Handle back-forward cache or back button press after logout
     const handleAuthCheck = () => {
-      const publicPaths = ['/login', '/admin/login', '/register', '/verify'];
+      const publicPaths = ['/login', '/admin', '/admin/login', '/admin/register', '/register', '/verify'];
       if (!authService.isAuthenticated() && !publicPaths.includes(window.location.pathname)) {
         if (window.location.pathname.startsWith('/admin')) {
           window.location.replace('/admin/login');
@@ -141,6 +142,7 @@ function App() {
 
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route path="/admin/register" element={<AdminRegisterPage />} />
         <Route
           path="/admin/dashboard"
           element={
@@ -149,14 +151,7 @@ function App() {
             </AdminRoute>
           }
         />
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
-          }
-        />
+        <Route path="/admin" element={<AdminLoginPage />} />
 
         {/* Fallback Catch-all */}
         <Route path="*" element={<Navigate to="/login" replace />} />

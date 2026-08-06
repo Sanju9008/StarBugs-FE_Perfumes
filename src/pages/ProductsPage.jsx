@@ -10,6 +10,8 @@ const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
   const [cartCount, setCartCount] = useState(0);
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,6 +45,10 @@ const ProductsPage = () => {
     
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategoryFilter]);
 
   const handleAddToCart = async (product) => {
     try {
@@ -83,11 +89,25 @@ const ProductsPage = () => {
     if (selectedCategoryFilter === 'all') return true;
     if (!product.category) return false;
     
-    if (selectedCategoryFilter === 'mens') return product.category.categoryId === 2;
-    if (selectedCategoryFilter === 'womens') return product.category.categoryId === 1;
-    if (selectedCategoryFilter === 'luxury') return product.category.categoryId === 3;
+    const catName = product.category.categoryName ? product.category.categoryName.toLowerCase() : '';
+    const catId = product.category.categoryId;
+
+    if (selectedCategoryFilter === 'mens') {
+      return catId === 2 || (catName.includes('men') && !catName.includes('women'));
+    }
+    if (selectedCategoryFilter === 'womens') {
+      return catId === 1 || catName.includes('women');
+    }
+    if (selectedCategoryFilter === 'luxury') {
+      return catId === 3 || catName.includes('lux');
+    }
     return true;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / itemsPerPage));
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const paginatedProducts = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <div className="products-page-container">
@@ -106,9 +126,10 @@ const ProductsPage = () => {
         ) : error ? (
           <div className="alert alert-error">{error}</div>
         ) : (
-          <div className="products-grid">
-            {filteredProducts.map(product => {
-              const cartItem = cartItems.find(item => item.productId === product.productId);
+          <>
+            <div className="products-grid">
+              {paginatedProducts.map(product => {
+                const cartItem = cartItems.find(item => item.productId === product.productId);
               return (
                 <ProductCard 
                   key={product.productId} 
@@ -120,7 +141,61 @@ const ProductsPage = () => {
                 />
               );
             })}
-          </div>
+            </div>
+
+            {/* Customer Products Pagination Bar */}
+            {filteredProducts.length > 0 && (
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '1rem',
+                margin: '2.5rem 0 1.5rem 0',
+                padding: '1rem',
+                background: 'rgba(255, 255, 255, 0.03)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 255, 255, 0.08)'
+              }}>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  style={{
+                    padding: '0.6rem 1.25rem',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    background: currentPage === 1 ? 'rgba(255,255,255,0.02)' : '#1e293b',
+                    color: currentPage === 1 ? '#64748b' : '#fff',
+                    cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                    fontWeight: 600,
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  Previous
+                </button>
+
+                <span style={{ fontSize: '0.95rem', color: '#cbd5e1', fontWeight: 600 }}>
+                  Page {currentPage} of {totalPages}
+                </span>
+
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  style={{
+                    padding: '0.6rem 1.25rem',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    background: currentPage === totalPages ? 'rgba(255,255,255,0.02)' : '#1e293b',
+                    color: currentPage === totalPages ? '#64748b' : '#fff',
+                    cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                    fontWeight: 600,
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
         )}
       </main>
     </div>
