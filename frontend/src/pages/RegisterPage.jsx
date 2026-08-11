@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import authService from '../services/authService';
-
 import { toast } from 'react-toastify';
 
 const RegisterPage = () => {
@@ -20,8 +19,10 @@ const RegisterPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear errors when typing
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
     if (status.type === 'error') setStatus({ type: '', message: '' });
   };
 

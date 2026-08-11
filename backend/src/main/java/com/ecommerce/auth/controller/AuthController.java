@@ -32,6 +32,13 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PostMapping("/register-admin")
+    public ResponseEntity<AuthResponse> registerAdmin(@Valid @RequestBody RegisterRequest request) {
+        log.info("Admin registration attempt for email: {}", request.getEmail());
+        AuthResponse response = authService.registerAdmin(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     // ─── GET /api/auth/verify ──────────────────────────────────────────────────
 
     @GetMapping("/verify")
@@ -68,17 +75,38 @@ public class AuthController {
     // ─── POST /api/auth/logout ─────────────────────────────────────────────────
 
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, Object>> logout(HttpServletResponse httpResponse, java.security.Principal principal) {
+    public ResponseEntity<Map<String, Object>> logout(
+            jakarta.servlet.http.HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse,
+            java.security.Principal principal
+    ) {
         if (principal != null) {
             authService.logout(principal.getName());
+        } else {
+            String authHeader = httpRequest.getHeader("Authorization");
+            String jwt = null;
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                jwt = authHeader.substring(7);
+            } else if (httpRequest.getCookies() != null) {
+                for (Cookie c : httpRequest.getCookies()) {
+                    if ("jwt_token".equals(c.getName())) {
+                        jwt = c.getValue();
+                        break;
+                    }
+                }
+            }
+            if (jwt != null && !jwt.trim().isEmpty()) {
+                authService.logoutByToken(jwt);
+            }
         }
 
-        // Clear JWT cookie
-        Cookie jwtCookie = new Cookie("jwt_token", null);
+        // Clear JWT cookie with empty value and 0 MaxAge
+        Cookie jwtCookie = new Cookie("jwt_token", "");
         jwtCookie.setHttpOnly(true);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(0);
         httpResponse.addCookie(jwtCookie);
+        httpResponse.setHeader("Set-Cookie", "jwt_token=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax");
 
         return ResponseEntity.ok(Map.of(
             "success", true,

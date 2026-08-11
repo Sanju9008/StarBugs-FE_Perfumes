@@ -95,7 +95,7 @@ public class PaymentService {
                 .user(user)
                 .address(address)
                 .totalAmount(totalAmount)
-                .status(OrderStatus.PENDING)
+                .status(OrderStatus.ORDER_PLACED)
                 .build();
         
         order = orderRepository.save(order);
@@ -156,7 +156,7 @@ public class PaymentService {
             paymentRepository.save(payment);
 
             Order order = payment.getOrder();
-            order.setStatus(OrderStatus.SUCCESS);
+            order.setStatus(OrderStatus.ORDER_PLACED);
             orderRepository.save(order);
 
             // Clear the user's cart after successful payment

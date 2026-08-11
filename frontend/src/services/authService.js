@@ -10,16 +10,73 @@ const api = axios.create({
   },
 });
 
+// Helper to check token validity string
+const isValidToken = (token) => {
+  return token && typeof token === 'string' && token.trim() !== '' && token !== 'null' && token !== 'undefined';
+};
+
+// Helper to clear token from everywhere
+const clearAuthFromEverywhere = () => {
+  try {
+    localStorage.removeItem('jwt_token');
+    localStorage.removeItem('user');
+    localStorage.clear();
+    sessionStorage.clear();
+    Cookies.remove('jwt_token', { path: '/' });
+    Cookies.set('jwt_token', '', { expires: -1, path: '/' });
+    document.cookie = "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    delete api.defaults.headers.common['Authorization'];
+  } catch (e) {
+    console.error('Error clearing storage/cookies:', e);
+  }
+};
+
 // Request interceptor to add JWT token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('jwt_token');
-    if (token) {
+    const token = localStorage.getItem('jwt_token') || Cookies.get('jwt_token');
+    if (isValidToken(token)) {
       config.headers['Authorization'] = `Bearer ${token}`;
+    } else {
+      delete config.headers['Authorization'];
     }
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+const handleUnauthorizedRedirect = () => {
+  const publicPaths = ['/login', '/register', '/admin/login', '/admin/register', '/verify'];
+  if (!publicPaths.includes(window.location.pathname)) {
+    clearAuthFromEverywhere();
+    if (window.location.pathname.startsWith('/admin')) {
+      window.location.replace('/admin/login');
+    } else {
+      window.location.replace('/login');
+    }
+  }
+};
+
+// Response interceptor to catch 401/403 unauthorized responses
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      handleUnauthorizedRedirect();
+    }
+    return Promise.reject(error);
+  }
+);
+
+// Global axios interceptor as well for any standalone service calls
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      handleUnauthorizedRedirect();
+    }
+    return Promise.reject(error);
+  }
 );
 
 const authService = {
@@ -35,12 +92,26 @@ const authService = {
     }
   },
 
+  registerAdmin: async (adminData) => {
+    try {
+      const response = await api.post(`${API_URL}/register-admin`, adminData);
+      return response.data;
+    } catch (error) {
+      if (!error.response) {
+        throw { message: 'Network error: Cannot reach the server. It might still be starting up.' };
+      }
+      throw error.response?.data || { message: 'Admin registration failed' };
+    }
+  },
+
   login: async (credentials) => {
     try {
       const response = await api.post(`${API_URL}/login`, credentials);
-      if (response.data.token) {
-        localStorage.setItem('jwt_token', response.data.token);
+      if (response.data && response.data.token) {
+        const token = response.data.token;
+        localStorage.setItem('jwt_token', token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
+        Cookies.set('jwt_token', token, { expires: 7, path: '/' });
       }
       return response.data;
     } catch (error) {
@@ -52,11 +123,14 @@ const authService = {
     try {
       await api.post(`${API_URL}/logout`);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('Logout API call error:', error);
     } finally {
-      localStorage.removeItem('jwt_token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      clearAuthFromEverywhere();
+      if (window.location.pathname.startsWith('/admin')) {
+        window.location.replace('/admin/login');
+      } else {
+        window.location.replace('/login');
+      }
     }
   },
 
@@ -79,7 +153,8 @@ const authService = {
   },
   
   isAuthenticated: () => {
-      return !!localStorage.getItem('jwt_token');
+    const token = localStorage.getItem('jwt_token') || Cookies.get('jwt_token');
+    return isValidToken(token);
   }
 };
 

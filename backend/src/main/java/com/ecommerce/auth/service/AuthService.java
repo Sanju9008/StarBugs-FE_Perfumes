@@ -66,6 +66,34 @@ public class AuthService {
                 .build();
     }
 
+    // ─── Register Admin ───────────────────────────────────────────────────────
+
+    @Transactional
+    public AuthResponse registerAdmin(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Email is already registered. Please use a different email.");
+        }
+
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("Password and confirm password do not match.");
+        }
+
+        User user = User.builder()
+                .username(request.getUsername())
+                .email(request.getEmail().toLowerCase().trim())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(User.Role.ADMIN)
+                .build();
+
+        User savedUser = userRepository.save(user);
+        log.info("New Administrator registered: {}", savedUser.getEmail());
+
+        return AuthResponse.builder()
+                .success(true)
+                .message("Administrator account created successfully!")
+                .build();
+    }
+
     // ─── Verify Email ─────────────────────────────────────────────────────────
 
     @Transactional
@@ -143,6 +171,23 @@ public class AuthService {
         });
     }
 
+    @Transactional
+    public void logoutByToken(String token) {
+        if (token == null || token.trim().isEmpty()) {
+            return;
+        }
+        jwtTokenRepository.findByToken(token).ifPresent(jwtToken -> {
+            if (jwtToken.getUser() != null) {
+                List<JwtToken> userTokens = jwtTokenRepository.findAllByUser(jwtToken.getUser());
+                jwtTokenRepository.deleteAll(userTokens);
+                log.info("Deleted all tokens for user {} via token logout", jwtToken.getUser().getEmail());
+            } else {
+                jwtTokenRepository.delete(jwtToken);
+                log.info("Deleted single token");
+            }
+        });
+    }
+
     // ─── Get User by ID ───────────────────────────────────────────────────────
 
     public AuthResponse.UserInfo getUserById(Long id) {
@@ -168,7 +213,32 @@ public class AuthService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + id));
 
         if (request.getUsername() != null && !request.getUsername().trim().isEmpty()) {
-            user.setUsername(request.getUsername());
+            user.setUsername(request.getUsername().trim());
+        }
+
+        if (request.getEmail() != null && !request.getEmail().trim().isEmpty()) {
+            String newEmail = request.getEmail().toLowerCase().trim();
+            if (!newEmail.equals(user.getEmail()) && userRepository.existsByEmail(newEmail)) {
+                throw new IllegalArgumentException("Email '" + newEmail + "' is already in use by another user.");
+            }
+            user.setEmail(newEmail);
+        }
+
+        if (request.getPassword() != null && !request.getPassword().trim().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword().trim()));
+        }
+
+        if (request.getRole() != null && !request.getRole().trim().isEmpty()) {
+            try {
+                String roleStr = request.getRole().trim().toUpperCase();
+                if (roleStr.startsWith("ROLE_")) {
+                    roleStr = roleStr.substring(5);
+                }
+                User.Role newRole = User.Role.valueOf(roleStr);
+                user.setRole(newRole);
+            } catch (IllegalArgumentException e) {
+                log.warn("Invalid role requested: {}", request.getRole());
+            }
         }
 
         if (request.getProfilePhoto() != null) {
@@ -176,7 +246,7 @@ public class AuthService {
         }
 
         User updatedUser = userRepository.save(user);
-        log.info("User updated: {}", updatedUser.getEmail());
+        log.info("User updated by ID {}: email={}, role={}", updatedUser.getId(), updatedUser.getEmail(), updatedUser.getRole());
         return mapToUserInfo(updatedUser);
     }
 

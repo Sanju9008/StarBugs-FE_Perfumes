@@ -33,4 +33,10 @@ public class OrderProductDto {
 
     @JsonProperty("image_url")
     private String imageUrl;
+
+    @JsonProperty("status")
+    private String status;
+
+    @JsonProperty("date")
+    private String date;
 }

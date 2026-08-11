@@ -7,6 +7,25 @@ import { toast } from 'react-toastify';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (authService.isAuthenticated()) {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          if (user && user.role && user.role.toUpperCase().includes('ADMIN')) {
+            navigate('/admin/dashboard', { replace: true });
+            return;
+          }
+        } catch (e) {
+          console.error('Error parsing user data:', e);
+        }
+      }
+      navigate('/products', { replace: true });
+    }
+  }, [navigate]);
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -30,7 +49,7 @@ const LoginPage = () => {
     try {
       await authService.login(formData);
       toast.success('Successfully logged in!');
-      navigate('/products');
+      navigate('/products', { replace: true });
     } catch (err) {
       const msg = err.message || 'Invalid email or password. Please try again.';
       setError(msg);
