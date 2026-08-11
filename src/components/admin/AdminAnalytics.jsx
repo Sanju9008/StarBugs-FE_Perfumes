@@ -143,7 +143,7 @@ const AdminAnalytics = () => {
         </div>
       ) : analyticsData ? (
         <>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem', marginBottom: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem', marginBottom: '3rem' }}>
             {/* Total Revenue */}
             <div style={{
               background: 'linear-gradient(135deg, rgba(52,211,153,0.12) 0%, rgba(16,185,129,0.06) 100%)',
@@ -151,16 +151,17 @@ const AdminAnalytics = () => {
               borderRadius: '14px',
               padding: '1.5rem',
               position: 'relative',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              boxShadow: '0 4px 15px rgba(52,211,153,0.05)'
             }}>
               <div style={{ position: 'absolute', top: '1rem', right: '1rem', fontSize: '2rem', opacity: 0.15 }}>₹</div>
-              <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 600, color: '#34d399', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 700, color: '#059669', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 Total Revenue
               </p>
-              <p style={{ margin: '0.6rem 0 0', fontSize: '2rem', fontWeight: 800, color: '#34d399', lineHeight: 1 }}>
+              <p style={{ margin: '0.6rem 0 0', fontSize: '2.2rem', fontWeight: 800, color: '#059669', lineHeight: 1 }}>
                 ₹{analyticsData.totalRevenue ? parseFloat(analyticsData.totalRevenue).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
               </p>
-              <p style={{ margin: '0.4rem 0 0', fontSize: '0.78rem', color: '#64748b' }}>
+              <p style={{ margin: '0.5rem 0 0', fontSize: '0.8rem', color: '#475569', fontWeight: 500 }}>
                 {analyticsData.period && analyticsData.period !== 'All Time'
                   ? `Period: ${analyticsData.period}`
                   : 'All-time completed orders'}
@@ -174,16 +175,17 @@ const AdminAnalytics = () => {
               borderRadius: '14px',
               padding: '1.5rem',
               position: 'relative',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              boxShadow: '0 4px 15px rgba(99,102,241,0.05)'
             }}>
               <div style={{ position: 'absolute', top: '1rem', right: '1rem', fontSize: '2rem', opacity: 0.15 }}>👤</div>
-              <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 600, color: '#818cf8', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 700, color: '#4338ca', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 Total Users
               </p>
-              <p style={{ margin: '0.6rem 0 0', fontSize: '2rem', fontWeight: 800, color: '#818cf8', lineHeight: 1 }}>
+              <p style={{ margin: '0.6rem 0 0', fontSize: '2.2rem', fontWeight: 800, color: '#4338ca', lineHeight: 1 }}>
                 {analyticsData.totalUsers}
               </p>
-              <p style={{ margin: '0.4rem 0 0', fontSize: '0.78rem', color: '#64748b' }}>Registered accounts</p>
+              <p style={{ margin: '0.5rem 0 0', fontSize: '0.8rem', color: '#475569', fontWeight: 500 }}>Registered accounts</p>
             </div>
 
             {/* Total Products */}
@@ -193,25 +195,29 @@ const AdminAnalytics = () => {
               borderRadius: '14px',
               padding: '1.5rem',
               position: 'relative',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              boxShadow: '0 4px 15px rgba(245,158,11,0.05)'
             }}>
               <div style={{ position: 'absolute', top: '1rem', right: '1rem', fontSize: '2rem', opacity: 0.15 }}>📦</div>
-              <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 600, color: '#fbbf24', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 700, color: '#b45309', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 Total Products
               </p>
-              <p style={{ margin: '0.6rem 0 0', fontSize: '2rem', fontWeight: 800, color: '#fbbf24', lineHeight: 1 }}>
+              <p style={{ margin: '0.6rem 0 0', fontSize: '2.2rem', fontWeight: 800, color: '#b45309', lineHeight: 1 }}>
                 {analyticsData.totalProducts}
               </p>
-              <p style={{ margin: '0.4rem 0 0', fontSize: '0.78rem', color: '#64748b' }}>Products in catalog</p>
+              <p style={{ margin: '0.5rem 0 0', fontSize: '0.8rem', color: '#475569', fontWeight: 500 }}>Products in catalog</p>
             </div>
           </div>
+
+          <div style={{ margin: '3rem 0', height: '1px', background: 'linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0) 100%)' }}></div>
 
           {/* Low Stock Table */}
           <div style={{
             background: '#ffffff',
             border: '1px solid rgba(248,113,113,0.25)',
             borderRadius: '14px',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            boxShadow: '0 10px 25px rgba(248,113,113,0.05)'
           }}>
             <div style={{
               display: 'flex',

@@ -129,15 +129,7 @@ const AdminLoginPage = () => {
           </button>
         </form>
 
-        <div className="admin-login-footer">
-          <div>
-            Need an Administrator account?{' '}
-            <Link to="/admin/register" className="admin-link">
-              <UserPlus size={14} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
-              Register Admin
-            </Link>
-          </div>
-        </div>
+
       </div>
     </div>
   );

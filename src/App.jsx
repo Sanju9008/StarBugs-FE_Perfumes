@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import AdminLoginPage from './pages/AdminLoginPage'
-import AdminRegisterPage from './pages/AdminRegisterPage'
 import AdminDashboard from './pages/AdminDashboard'
 import RegisterPage from './pages/RegisterPage'
 import HomePage from './pages/HomePage'
@@ -142,7 +141,6 @@ function App() {
 
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLoginPage />} />
-        <Route path="/admin/register" element={<AdminRegisterPage />} />
         <Route
           path="/admin/dashboard"
           element={

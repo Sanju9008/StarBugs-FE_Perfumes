@@ -4,22 +4,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #0f172a 60%, #020617 100%);
+  background: radial-gradient(circle at 50% 20%, #ffffff 0%, #f3f4f6 60%, #e5e7eb 100%);
   padding: 2rem;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color: #f8fafc;
+  color: #111827;
 }
 
 .admin-login-card {
   width: 100%;
   max-width: 440px;
-  background: rgba(30, 41, 59, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 20px;
   padding: 2.5rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 0 30px rgba(16, 185, 129, 0.05);
 }
 
 .admin-badge-header {
@@ -33,24 +33,24 @@
   justify-content: center;
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   border-radius: 16px;
   color: #ffffff;
   margin-bottom: 1.25rem;
-  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
 }
 
 .admin-login-title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #111827;
   margin: 0 0 0.5rem 0;
   letter-spacing: -0.025em;
 }
 
 .admin-login-subtitle {
   font-size: 0.925rem;
-  color: #94a3b8;
+  color: #6b7280;
   margin: 0;
 }
 
@@ -62,7 +62,7 @@
   display: block;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #cbd5e1;
+  color: #374151;
   margin-bottom: 0.5rem;
 }
 
@@ -75,32 +75,32 @@
 .admin-input-icon {
   position: absolute;
   left: 14px;
-  color: #64748b;
+  color: #9ca3af;
   pointer-events: none;
 }
 
 .admin-form-input {
   width: 100%;
   padding: 0.85rem 1rem 0.85rem 2.75rem;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #ffffff;
+  border: 1px solid #d1d5db;
   border-radius: 12px;
-  color: #ffffff;
+  color: #111827;
   font-size: 0.95rem;
   transition: all 0.2s ease;
 }
 
 .admin-form-input:focus {
   outline: none;
-  border-color: #6366f1;
-  background: rgba(15, 23, 42, 0.9);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+  border-color: #10b981;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
 }
 
 .admin-submit-btn {
   width: 100%;
   padding: 0.9rem;
-  background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: #ffffff;
   border: none;
   border-radius: 12px;
@@ -112,13 +112,13 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
 }
 
 .admin-submit-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
 }
 
 .admin-submit-btn:disabled {
@@ -129,31 +129,31 @@
 .admin-login-footer {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   text-align: center;
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: #6b7280;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
 .admin-link {
-  color: #818cf8;
+  color: #10b981;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
 .admin-link:hover {
-  color: #a5b4fc;
+  color: #059669;
   text-decoration: underline;
 }
 
 .admin-alert-error {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #dc2626;
   padding: 0.85rem 1rem;
   border-radius: 10px;
   font-size: 0.875rem;
