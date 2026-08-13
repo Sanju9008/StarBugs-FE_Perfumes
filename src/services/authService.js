@@ -1,9 +1,8 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_URL = '/api/auth';
-const USER_API_URL = '/api/users';
-
+const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`;
+const USER_API_URL = `${import.meta.env.VITE_API_URL}/api/users`;
 const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
@@ -45,24 +44,15 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-const handleUnauthorizedRedirect = () => {
-  const publicPaths = ['/login', '/register', '/admin/login', '/admin/register', '/verify'];
-  if (!publicPaths.includes(window.location.pathname)) {
-    clearAuthFromEverywhere();
-    if (window.location.pathname.startsWith('/admin')) {
-      window.location.replace('/admin/login');
-    } else {
-      window.location.replace('/login');
-    }
-  }
-};
-
 // Response interceptor to catch 401/403 unauthorized responses
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      handleUnauthorizedRedirect();
+      clearAuthFromEverywhere();
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+        window.location.replace('/login');
+      }
     }
     return Promise.reject(error);
   }
@@ -73,7 +63,10 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      handleUnauthorizedRedirect();
+      clearAuthFromEverywhere();
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+        window.location.replace('/login');
+      }
     }
     return Promise.reject(error);
   }
@@ -89,18 +82,6 @@ const authService = {
         throw { message: 'Network error: Cannot reach the server. It might still be starting up.' };
       }
       throw error.response?.data || { message: 'Registration failed' };
-    }
-  },
-
-  registerAdmin: async (adminData) => {
-    try {
-      const response = await api.post(`${API_URL}/register-admin`, adminData);
-      return response.data;
-    } catch (error) {
-      if (!error.response) {
-        throw { message: 'Network error: Cannot reach the server. It might still be starting up.' };
-      }
-      throw error.response?.data || { message: 'Admin registration failed' };
     }
   },
 
@@ -126,11 +107,7 @@ const authService = {
       console.error('Logout API call error:', error);
     } finally {
       clearAuthFromEverywhere();
-      if (window.location.pathname.startsWith('/admin')) {
-        window.location.replace('/admin/login');
-      } else {
-        window.location.replace('/login');
-      }
+      window.location.replace('/login');
     }
   },
 
@@ -151,7 +128,7 @@ const authService = {
       throw error;
     }
   },
-  
+
   isAuthenticated: () => {
     const token = localStorage.getItem('jwt_token') || Cookies.get('jwt_token');
     return isValidToken(token);

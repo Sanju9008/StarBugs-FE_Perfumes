@@ -1,22 +1,20 @@
-import React, { useEffect, Suspense, lazy } from 'react'
+import React, { useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import LoginPage from './pages/LoginPage'
+import AdminLoginPage from './pages/AdminLoginPage'
+import AdminDashboard from './pages/AdminDashboard'
+import RegisterPage from './pages/RegisterPage'
+import HomePage from './pages/HomePage'
+import VerifyEmailPage from './pages/VerifyEmailPage'
+import ProductsPage from './pages/ProductsPage'
+import CartPage from './pages/CartPage'
+import CheckoutPage from './pages/CheckoutPage'
+import OrderSuccessPage from './pages/OrderSuccessPage'
+import OrdersPage from './pages/OrdersPage'
+import ProfilePage from './pages/ProfilePage'
 import authService from './services/authService'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-
-const LoginPage = lazy(() => import('./pages/LoginPage'))
-const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'))
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard'))
-const RegisterPage = lazy(() => import('./pages/RegisterPage'))
-const HomePage = lazy(() => import('./pages/HomePage'))
-const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'))
-const ProductsPage = lazy(() => import('./pages/ProductsPage'))
-const CartPage = lazy(() => import('./pages/CartPage'))
-const CheckoutPage = lazy(() => import('./pages/CheckoutPage'))
-const OrderSuccessPage = lazy(() => import('./pages/OrderSuccessPage'))
-const OrdersPage = lazy(() => import('./pages/OrdersPage'))
-const ProfilePage = lazy(() => import('./pages/ProfilePage'))
-
 
 function PrivateRoute({ children }) {
   const isAuth = authService.isAuthenticated()
@@ -54,7 +52,7 @@ function App() {
   useEffect(() => {
     // Handle back-forward cache or back button press after logout
     const handleAuthCheck = () => {
-      const publicPaths = ['/login', '/admin', '/admin/login', '/admin/register', '/register', '/verify'];
+      const publicPaths = ['/login', '/admin/login', '/register', '/verify'];
       if (!authService.isAuthenticated() && !publicPaths.includes(window.location.pathname)) {
         if (window.location.pathname.startsWith('/admin')) {
           window.location.replace('/admin/login');
@@ -78,8 +76,7 @@ function App() {
 
   return (
     <>
-      <Suspense fallback={<div className="loading-container"><div className="spinner"></div><p>Loading...</p></div>}>
-        <Routes>
+      <Routes>
         {/* User Routes */}
         <Route path="/" element={<PrivateRoute><ProductsPage /></PrivateRoute>} />
         <Route path="/login" element={<LoginPage />} />
@@ -152,12 +149,18 @@ function App() {
             </AdminRoute>
           }
         />
-        <Route path="/admin" element={<AdminLoginPage />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
 
         {/* Fallback Catch-all */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
-      </Suspense>
       <ToastContainer position="bottom-right" autoClose={3000} />
     </>
   )

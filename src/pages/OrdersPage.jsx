@@ -33,30 +33,6 @@ const OrdersPage = () => {
 
   const goHome = () => navigate('/products');
 
-  const getStatusBadgeStyle = (status) => {
-    switch (status) {
-      case 'DELIVERED':
-      case 'SUCCESS':
-      case 'PENDING':
-        return { background: 'rgba(52, 211, 153, 0.2)', color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.3)' };
-      case 'SHIPPED':
-        return { background: 'rgba(129, 140, 248, 0.2)', color: '#818cf8', border: '1px solid rgba(129, 140, 248, 0.3)' };
-      case 'PACKING':
-        return { background: 'rgba(192, 132, 252, 0.2)', color: '#c084fc', border: '1px solid rgba(192, 132, 252, 0.3)' };
-      case 'ORDER_PLACED':
-        return { background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)' };
-      case 'FAILED':
-        return { background: 'rgba(248, 113, 113, 0.2)', color: '#f87171', border: '1px solid rgba(248, 113, 113, 0.3)' };
-      default:
-        return { background: 'rgba(52, 211, 153, 0.2)', color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.3)' };
-    }
-  };
-
-  const formatStatus = (status) => {
-    if (!status || status === 'PENDING' || status === 'SUCCESS') return 'DELIVERED';
-    return status.replace(/_/g, ' ');
-  };
-
   if (loading) {
     return (
       <div className="orders-page-container">
@@ -127,28 +103,7 @@ const OrdersPage = () => {
                   <div className="order-item-meta">
                     <div className="meta-info">
                       <span className="meta-label">Order ID:</span>
-                      <span className="meta-value" style={{ color: '#818cf8', fontWeight: 600 }}>#{product.order_id}</span>
-                    </div>
-                    {product.date && product.date !== 'N/A' && (
-                      <div className="meta-info">
-                        <span className="meta-label">Date:</span>
-                        <span className="meta-value">{product.date}</span>
-                      </div>
-                    )}
-                    <div className="meta-info">
-                      <span className="meta-label">Status:</span>
-                      <span
-                        style={{
-                          padding: '0.2rem 0.65rem',
-                          borderRadius: '12px',
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          display: 'inline-block',
-                          ...getStatusBadgeStyle(product.status)
-                        }}
-                      >
-                        {formatStatus(product.status)}
-                      </span>
+                      <span className="meta-value">{product.order_id}</span>
                     </div>
                     <div className="meta-info">
                       <span className="meta-label">Qty:</span>

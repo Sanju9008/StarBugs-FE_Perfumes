@@ -1,11 +1,11 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_URL = '/api/orders';
+const API_URL = `${import.meta.env.VITE_API_URL}/api/orders`;
 
 const getOrders = async () => {
     const token = localStorage.getItem('jwt_token') || Cookies.get('token') || Cookies.get('jwt_token');
-    
+
     if (!token) {
         throw new Error('No authentication token found');
     }
@@ -16,7 +16,7 @@ const getOrders = async () => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        
+
         return response.data;
     } catch (error) {
         throw error;

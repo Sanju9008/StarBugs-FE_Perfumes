@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://starbugs-be-perfumes.onrender.com/api/$1"
+      "destination": "https://starbugs-be-perfumes-ocu3.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",

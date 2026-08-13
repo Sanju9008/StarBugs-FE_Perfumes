@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_BASE = '/api';
+const API_BASE = `${import.meta.env.VITE_API_URL}/api`;
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('jwt_token') || Cookies.get('jwt_token');
@@ -18,17 +18,6 @@ const adminService = {
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to create product' };
-    }
-  },
-
-  updateProduct: async (productId, productData) => {
-    try {
-      const response = await axios.put(`${API_BASE}/products/${productId}`, productData, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || { message: 'Failed to update product' };
     }
   },
 
@@ -127,18 +116,6 @@ const adminService = {
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to fetch overall analytics' };
-    }
-  },
-
-  // ─── Order Status Management ─────────────────────────────────────────────
-  updateOrderStatus: async (orderId, status) => {
-    try {
-      const response = await axios.put(`${API_BASE}/admin/orders/${orderId}/status`, { status }, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || { message: 'Failed to update order status' };
     }
   }
 };
