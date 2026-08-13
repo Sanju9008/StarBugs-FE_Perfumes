@@ -1,20 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, Suspense, lazy } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import LoginPage from './pages/LoginPage'
-import AdminLoginPage from './pages/AdminLoginPage'
-import AdminDashboard from './pages/AdminDashboard'
-import RegisterPage from './pages/RegisterPage'
-import HomePage from './pages/HomePage'
-import VerifyEmailPage from './pages/VerifyEmailPage'
-import ProductsPage from './pages/ProductsPage'
-import CartPage from './pages/CartPage'
-import CheckoutPage from './pages/CheckoutPage'
-import OrderSuccessPage from './pages/OrderSuccessPage'
-import OrdersPage from './pages/OrdersPage'
-import ProfilePage from './pages/ProfilePage'
 import authService from './services/authService'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+
+const LoginPage = lazy(() => import('./pages/LoginPage'))
+const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'))
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'))
+const RegisterPage = lazy(() => import('./pages/RegisterPage'))
+const HomePage = lazy(() => import('./pages/HomePage'))
+const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'))
+const ProductsPage = lazy(() => import('./pages/ProductsPage'))
+const CartPage = lazy(() => import('./pages/CartPage'))
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage'))
+const OrderSuccessPage = lazy(() => import('./pages/OrderSuccessPage'))
+const OrdersPage = lazy(() => import('./pages/OrdersPage'))
+const ProfilePage = lazy(() => import('./pages/ProfilePage'))
+
 
 function PrivateRoute({ children }) {
   const isAuth = authService.isAuthenticated()
@@ -76,7 +78,8 @@ function App() {
 
   return (
     <>
-      <Routes>
+      <Suspense fallback={<div className="loading-container"><div className="spinner"></div><p>Loading...</p></div>}>
+        <Routes>
         {/* User Routes */}
         <Route path="/" element={<PrivateRoute><ProductsPage /></PrivateRoute>} />
         <Route path="/login" element={<LoginPage />} />
@@ -154,6 +157,7 @@ function App() {
         {/* Fallback Catch-all */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
+      </Suspense>
       <ToastContainer position="bottom-right" autoClose={3000} />
     </>
   )
