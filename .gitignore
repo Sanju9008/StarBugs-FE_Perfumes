@@ -18,6 +18,11 @@ frontend/.env.*
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
+node_modules/
+dist/
+.env.local
+.env.*.local
+vite.config.js.timestamp-*
 
 # Backend
 backend/target/
@@ -40,3 +45,4 @@ backend/*.class
 *.njsproj
 *.sln
 *.sw?
+*.log
